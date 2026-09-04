@@ -38,13 +38,13 @@ graph TB
 
     subgraph PRESENTATION["4. Presentation & User Delivery"]
         C1["GitHub Pages 3D Dashboard<br/><code>site/index.html</code> (Vanilla JS/CSS)"]
-        C2["Candidate Telegram App<br/>(Daily 07:00 AM UTC Push Notification)"]
+        C2["Candidate Telegram App<br/>(Daily 07:00 AM German Time Push Notification)"]
         
         B1 --> C1
         B2 --> C2
     end
 
-    subgraph CI_CD["Automated Daily Trigger (07:00 UTC)"]
+    subgraph CI_CD["Automated Daily Trigger (07:00 German Time)"]
         CRON["GitHub Actions Daily Cron<br/><code>.github/workflows/daily_radar.yml</code>"]
         CRON --> A2
     end
@@ -65,7 +65,7 @@ graph TB
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Cron as GitHub Actions / Crontab (07:00 UTC)
+    actor Cron as GitHub Actions / Crontab (07:00 AM German Time)
     participant Fetch as scripts/fetch_feed.py
     participant Arbeitnow as Arbeitnow API
     participant Rank as scripts/rank_jobs.py
@@ -105,7 +105,7 @@ sequenceDiagram
 | **Site Compiler** | [`scripts/build_site.py`](file:///home/srinivas/Desktop/agent/scripts/build_site.py) | Generates zero-dependency static HTML/CSS/JS ready for GitHub Pages. |
 | **Telegram Notifier** | [`scripts/send_telegram.py`](file:///home/srinivas/Desktop/agent/scripts/send_telegram.py) | Formats and dispatches top match alerts to Telegram with 1-tap apply links. |
 | **Refresh Pipeline** | [`run_daily_refresh.sh`](file:///home/srinivas/Desktop/agent/run_daily_refresh.sh) | 1-click executable running the full 3-step ingestion, scoring, and alerting pipeline. |
-| **Cloud Automation** | [`.github/workflows/daily_radar.yml`](file:///home/srinivas/Desktop/agent/.github/workflows/daily_radar.yml) | Daily 07:00 AM UTC GitHub Actions workflow deploying to Pages and alerting Telegram. |
+| **Cloud Automation** | [`.github/workflows/daily_radar.yml`](file:///home/srinivas/Desktop/agent/.github/workflows/daily_radar.yml) | Daily 07:00 AM German Time GitHub Actions workflow deploying to Pages and alerting Telegram. |
 
 ---
 
@@ -140,7 +140,7 @@ python3 -m http.server 8080 --directory site
 
 ## 📱 Telegram Morning Alert Setup
 
-Every morning at 07:00 AM UTC (09:00 AM German time), Job Radar delivers a digest of the top ranked jobs to your Telegram chat.
+Every morning at 07:00 AM German Time (Europe/Berlin), Job Radar delivers a digest of the top ranked jobs to your Telegram chat.
 
 ### 1. Create a Telegram Bot (30 seconds)
 1. Open Telegram and search for [`@BotFather`](https://t.me/BotFather).
@@ -174,4 +174,4 @@ python3 scripts/send_telegram.py --test
    - `TELEGRAM_CHAT_ID`: Your Telegram Chat ID.
    - `DASHBOARD_URL`: `https://<YOUR_USERNAME>.github.io/job-radar/`
 3. Go to **Settings > Pages** and set **Source** to **GitHub Actions**.
-4. GitHub Actions will now automatically update your site and notify your Telegram every morning at 07:00 UTC!
+4. GitHub Actions will now automatically update your site and notify your Telegram every morning at 07:00 AM German Time!

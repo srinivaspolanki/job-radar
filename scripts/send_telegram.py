@@ -163,7 +163,7 @@ def main():
             "✅ Your Telegram Bot connection is successfully configured!\n"
             f"Candidate: <b>{escape_html(profile.get('candidate_name', 'Student'))}</b>\n"
             f"Synced Listings: <b>{len(ranked_jobs)} jobs monitored</b>\n\n"
-            "You will receive your daily morning digest every morning at 07:00 UTC."
+            "You will receive your daily morning digest every morning at 07:00 AM German Time."
         )
         send_telegram_notification(bot_token, chat_id, test_msg)
         return

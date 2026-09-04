@@ -1,4 +1,4 @@
-# Example crontab entry for local daily morning run at 07:00 AM
+# Example crontab entry for local daily morning run at 07:00 AM German Time
 # Edit your crontab with: crontab -e
 # Replace /home/srinivas/Desktop/agent with your actual project directory
 
