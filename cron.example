@@ -1,0 +1,5 @@
+# Example crontab entry for local daily morning run at 07:00 AM
+# Edit your crontab with: crontab -e
+# Replace /home/srinivas/Desktop/agent with your actual project directory
+
+0 7 * * * cd /home/srinivas/Desktop/agent && ./run_daily_refresh.sh >> /home/srinivas/Desktop/agent/radar_refresh.log 2>&1

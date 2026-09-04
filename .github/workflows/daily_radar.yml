@@ -1,0 +1,72 @@
+name: Daily Job Radar Refresh & GitHub Pages Deploy
+
+on:
+  schedule:
+    # Runs every morning at 07:00 UTC (09:00 CEST / Germany time)
+    - cron: '0 7 * * *'
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allows manual trigger from GitHub Actions tab
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Restore candidate profile from secret (Privacy-Safe)
+        env:
+          JOB_RADAR_PROFILE: ${{ secrets.JOB_RADAR_PROFILE }}
+        run: |
+          if [ -n "$JOB_RADAR_PROFILE" ]; then
+            echo "$JOB_RADAR_PROFILE" > profile.json
+            echo "Successfully restored profile.json from JOB_RADAR_PROFILE secret."
+          else
+            echo "No secret provided. Using profile.example.json as template."
+            cp profile.example.json profile.json
+          fi
+
+      - name: Run Job Radar Refresh & Site Compilation
+        env:
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          DASHBOARD_URL: ${{ secrets.DASHBOARD_URL }}
+        run: |
+          chmod +x ./run_daily_refresh.sh
+          ./run_daily_refresh.sh
+
+      - name: Remove profile before uploading artifact (Privacy Protection)
+        run: |
+          rm -f profile.json
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+
+      - name: Upload static artifact (Only site/ folder)
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './site'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

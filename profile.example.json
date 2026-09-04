@@ -1,0 +1,36 @@
+{
+  "candidate_name": "Alex Weber",
+  "degree": "M.Sc. Computer Science",
+  "university": "Technical University of Munich (TUM)",
+  "is_enrolled_student": true,
+  "skills": [
+    "Python",
+    "FastAPI",
+    "SQL",
+    "PostgreSQL",
+    "Docker",
+    "PyTorch",
+    "Git",
+    "AWS",
+    "REST API",
+    "CI/CD"
+  ],
+  "languages": {
+    "English": "C1",
+    "German": "B2"
+  },
+  "locations": [
+    "Munich",
+    "Berlin",
+    "Remote"
+  ],
+  "work_models": [
+    "Hybrid",
+    "Remote"
+  ],
+  "job_types": [
+    "working_student",
+    "internship",
+    "entry_level"
+  ]
+}

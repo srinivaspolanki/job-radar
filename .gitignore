@@ -1,0 +1,16 @@
+# Privacy: Candidate profile ignored from Git
+profile.json
+
+# Python & Cache
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+backend/venv/
+.env
+*.db
+.pytest_cache/
+
+# OS & Logs
+.DS_Store
+*.log
