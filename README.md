@@ -1,50 +1,74 @@
-# Job Radar (Werkstudent & Junior Tech)
+# 🎯 Job Radar — Automated Career Intelligence Engine
 
-A privacy-minimized, automated career intelligence system that ingests German tech job listings, scores them against a structured candidate profile using a 4-pillar deterministic ranking engine, deploys a standalone 3D interactive dashboard to GitHub Pages, and delivers daily morning digests straight to Telegram.
+<div align="center">
+
+[![Daily CI/CD Refresh](https://github.com/srinivaspolanki/job-radar/actions/workflows/daily_radar.yml/badge.svg)](https://github.com/srinivaspolanki/job-radar/actions/workflows/daily_radar.yml)
+[![Live Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-DFFF04?style=flat&logo=github&logoColor=black)](https://srinivaspolanki.github.io/job-radar/)
+[![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
+[![Telegram](https://img.shields.io/badge/Telegram_Bot-Alerts-26A5E4?style=flat&logo=telegram&logoColor=white)](https://telegram.org/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
+
+**A deterministic, privacy-preserving job intelligence engine that ingests German tech roles, scores them against a structured candidate profile across 4 weighted signals, deploys a standalone 3D dashboard to GitHub Pages, and delivers daily morning digests straight to Telegram.**
+
+[Explore Live 3D Dashboard ↗](https://srinivaspolanki.github.io/job-radar/) · [Report Bug](https://github.com/srinivaspolanki/job-radar/issues) · [Request Feature](https://github.com/srinivaspolanki/job-radar/issues)
+
+</div>
 
 ---
 
-## System Architecture
+## 📌 Overview
+
+**Job Radar** solves the noise in daily job hunting. Instead of manually parsing hundreds of unstructured listings across multiple portals every morning, Job Radar runs an automated **4-pillar deterministic ranking algorithm** at **07:00 AM German Time (Europe/Berlin)**, scores roles against a candidate profile (Skills, Location, Language CEFR, Working Student status), and delivers top matches directly to Telegram and a high-performance web dashboard.
+
+### Key Highlights
+- **🔒 Privacy-by-Design**: Candidate CV and profile data remain 100% private in local configuration and ephemeral GitHub Secrets—never committed to source control or exposed in production builds.
+- **⚡ Deterministic Scoring Engine**: Pure algorithmic scoring across 4 transparent pillars with explainable matching rationales and gap analyses.
+- **📱 Automated Telegram Alerts**: Real-time morning push notifications featuring direct 1-tap application links.
+- **🌐 3D Interactive Dashboard**: Modern, cyber-racing inspired static web client built with Vanilla JS/CSS, 3D scroll perspectives, dynamic filters, and zero backend maintenance costs.
+
+---
+
+## 🏗️ System Architecture
 
 ```mermaid
 graph TB
-    subgraph DATA_INGESTION["1. Data Ingestion Layer"]
+    subgraph INGESTION["1. Data Ingestion Layer"]
         A1["Curated Direct Links<br/><code>data/jobs.csv</code><br/>(Siemens, BMW, Celonis, etc.)"]
-        A2["Live Public Job Feeds<br/><code>scripts/fetch_feed.py</code><br/>(Arbeitnow API)"]
+        A2["Live Public API Feed<br/><code>scripts/fetch_feed.py</code><br/>(Arbeitnow Feed API)"]
     end
 
-    subgraph INTELLIGENCE_ENGINE["2. Intelligence & Scoring Engine (scripts/rank_jobs.py)"]
+    subgraph ENGINE["2. Deterministic Scoring Engine (scripts/rank_jobs.py)"]
         P["Candidate Profile<br/><code>profile.json</code> / GitHub Secret<br/>(Skills, Degree, Languages, Location)"]
         
-        subgraph FOUR_PILLARS["4-Pillar Scoring Model"]
-            S1["Skills Match (40%)<br/>Exact & Synonym Mapping"]
-            S2["Location & Remote (25%)<br/>Distance & Work-Type Fit"]
-            S3["Language CEFR (20%)<br/>English C1 / German B2"]
-            S4["Student Status (15%)<br/>Werkstudent / Intern Fit"]
+        subgraph PILLARS["4-Pillar Weighted Scoring Model"]
+            S1["Skills Overlap (40%)<br/>Exact & Technical Synonym Fit"]
+            S2["Location & Remote (25%)<br/>Commute Proximity & Work Model"]
+            S3["Language CEFR (20%)<br/>English C1 / German B2 Compatibility"]
+            S4["Student Status (15%)<br/>Werkstudent / Internship Alignment"]
         end
         
-        P --> FOUR_PILLARS
-        A1 --> FOUR_PILLARS
-        A2 --> FOUR_PILLARS
+        P --> PILLARS
+        A1 --> PILLARS
+        A2 --> PILLARS
     end
 
-    subgraph COMPILATION_DISTRIBUTION["3. Compilation & Distribution Layer"]
+    subgraph DISTRIBUTION["3. Compilation & Notification Layer"]
         B1["Static Site Compiler<br/><code>scripts/build_site.py</code>"]
         B2["Telegram Alert Bot<br/><code>scripts/send_telegram.py</code>"]
         
-        FOUR_PILLARS --> B1
-        FOUR_PILLARS --> B2
+        PILLARS --> B1
+        PILLARS --> B2
     end
 
-    subgraph PRESENTATION["4. Presentation & User Delivery"]
+    subgraph PRESENTATION["4. Delivery & User Interfaces"]
         C1["GitHub Pages 3D Dashboard<br/><code>site/index.html</code> (Vanilla JS/CSS)"]
-        C2["Candidate Telegram App<br/>(Daily 07:00 AM German Time Push Notification)"]
+        C2["Candidate Telegram Client<br/>(Daily 07:00 AM German Time Alert)"]
         
         B1 --> C1
         B2 --> C2
     end
 
-    subgraph CI_CD["Automated Daily Trigger (07:00 German Time)"]
+    subgraph CI_CD["Automated Daily Trigger (07:00 AM Europe/Berlin)"]
         CRON["GitHub Actions Daily Cron<br/><code>.github/workflows/daily_radar.yml</code>"]
         CRON --> A2
     end
@@ -60,118 +84,166 @@ graph TB
 
 ---
 
-## Daily Execution Sequence
+## 🔄 Daily Execution Flow
 
 ```mermaid
 sequenceDiagram
     autonumber
-    actor Cron as GitHub Actions / Crontab (07:00 AM German Time)
+    actor Cron as GitHub Actions Cloud Scheduler (07:00 AM German Time)
     participant Fetch as scripts/fetch_feed.py
-    participant Arbeitnow as Arbeitnow API
-    participant Rank as scripts/rank_jobs.py
-    participant Build as scripts/build_site.py
+    participant API as Arbeitnow Public API
+    participant Engine as scripts/rank_jobs.py
+    participant Compiler as scripts/build_site.py
     participant Telegram as scripts/send_telegram.py
     participant Pages as GitHub Pages
-    actor Candidate as Polanki Srinivas (Phone)
+    actor Candidate as Candidate (Mobile Phone)
 
-    Cron->>Fetch: Execute fetch_feed.py
-    Fetch->>Arbeitnow: GET /api/job-board-api
-    Arbeitnow-->>Fetch: Fresh German Tech Job Postings
-    Fetch->>Fetch: Normalize timestamps & save data/arbeitnow_jobs.csv
+    Cron->>Fetch: Trigger job ingestion
+    Fetch->>API: GET /api/job-board-api
+    API-->>Fetch: Fresh German Tech Job Postings
+    Fetch->>Fetch: Normalize timestamps & write data/arbeitnow_jobs.csv
 
-    Cron->>Rank: Execute rank_jobs.py with profile.json
-    Rank->>Rank: Calculate 4-Pillar Composite Scores (0-100%)
-    Rank->>Rank: Generate "Why Matched" & "Gap Analysis"
+    Cron->>Engine: Ingest profile.json and compute scores
+    Engine->>Engine: Calculate 4-Pillar composite scores (0-100%)
+    Engine->>Engine: Generate explainable why_matched & gap_analysis
 
-    Cron->>Build: Execute build_site.py
-    Build->>Build: Compile ranked data into standalone site/index.html
-    Build->>Pages: Deploy site/ to GitHub Pages
+    Cron->>Compiler: Compile standalone client application
+    Compiler->>Compiler: Inject JSON payload & generate site/index.html
+    Compiler->>Pages: Deploy static artifact to GitHub Pages
 
-    Cron->>Telegram: Execute send_telegram.py
-    Telegram->>Telegram: Extract Top High-Match roles (>=80%)
-    Telegram->>Candidate: Send Telegram Morning Digest + Direct Apply Links ↗
+    Cron->>Telegram: Format top matches (>=80%)
+    Telegram->>Candidate: Push Telegram Morning Digest with direct apply links ↗
 ```
 
 ---
 
-## Component Breakdown
+## 📊 The 4-Pillar Scoring Model
 
-| Component | File Path | Responsibility |
-| :--- | :--- | :--- |
-| **Candidate Profile** | [`profile.json`](file:///home/srinivas/Desktop/agent/profile.json) | Stores candidate skills, degree, target locations, and language CEFR levels *(Git-ignored for privacy)*. |
-| **Profile Template** | [`profile.example.json`](file:///home/srinivas/Desktop/agent/profile.example.json) | Public template for setting up custom candidate profiles. |
-| **Feed Fetcher** | [`scripts/fetch_feed.py`](file:///home/srinivas/Desktop/agent/scripts/fetch_feed.py) | Ingests and normalizes live working student and tech roles from public feeds. |
-| **Ranking Engine** | [`scripts/rank_jobs.py`](file:///home/srinivas/Desktop/agent/scripts/rank_jobs.py) | Deterministic 4-signal scoring engine (Skills, Location, Language, Student status). |
-| **Site Compiler** | [`scripts/build_site.py`](file:///home/srinivas/Desktop/agent/scripts/build_site.py) | Generates zero-dependency static HTML/CSS/JS ready for GitHub Pages. |
-| **Telegram Notifier** | [`scripts/send_telegram.py`](file:///home/srinivas/Desktop/agent/scripts/send_telegram.py) | Formats and dispatches top match alerts to Telegram with 1-tap apply links. |
-| **Refresh Pipeline** | [`run_daily_refresh.sh`](file:///home/srinivas/Desktop/agent/run_daily_refresh.sh) | 1-click executable running the full 3-step ingestion, scoring, and alerting pipeline. |
-| **Cloud Automation** | [`.github/workflows/daily_radar.yml`](file:///home/srinivas/Desktop/agent/.github/workflows/daily_radar.yml) | Daily 07:00 AM German Time GitHub Actions workflow deploying to Pages and alerting Telegram. |
+| Pillar | Weight | Evaluation Criteria | Scoring Logic |
+| :--- | :---: | :--- | :--- |
+| **1. Technical Skills** | **40%** | Hard skills, tools, frameworks, and domain synonyms | Base overlap score + synonym graph match (e.g. `ROS 2` $\leftrightarrow$ `Robotics`, `FastAPI` $\leftrightarrow$ `Python`). |
+| **2. Location & Remote** | **25%** | Proximity to target cities & work arrangement | Full score for 100% Remote or target cities (e.g., Hof, Munich, Nuremberg); partial score for hybrid roles in Bavaria. |
+| **3. Language Proficiency** | **20%** | CEFR language requirements vs. candidate proficiencies | Compares candidate proficiencies (e.g., English C1, German B2) against job posting requirements. |
+| **4. Student & Role Fit** | **15%** | Working Student (*Werkstudent*) / Intern qualification | Matches enrolled master's student status with student-eligible listings. |
 
 ---
 
-## 🔒 Privacy-by-Design Architecture
+## 📁 Repository Structure
 
-1. **Local Privacy**: Your personal `profile.json` and `.env` credentials are git-ignored and never committed to source control.
-2. **Cloud Ephemeral Build**: The GitHub Actions workflow restores your profile in-memory from a repository secret (`JOB_RADAR_PROFILE`), executes the scoring engine, and deletes `profile.json` before publishing the artifact.
-3. **Zero Backend Exposure**: Only the pre-compiled static files inside `site/` are published to GitHub Pages.
+```text
+job-radar/
+├── .github/
+│   └── workflows/
+│       └── daily_radar.yml       # Automated GitHub Actions workflow (07:00 AM German Time)
+├── data/
+│   ├── jobs.csv                  # Curated direct company listings (Siemens, BMW, Celonis, etc.)
+│   └── arbeitnow_jobs.csv        # Normalized live public feed from Arbeitnow API
+├── scripts/
+│   ├── fetch_feed.py             # Public feed ingestion and timestamp normalization
+│   ├── rank_jobs.py              # 4-signal deterministic ranking algorithm
+│   ├── build_site.py             # Static HTML/CSS/JS compiler
+│   └── send_telegram.py          # Telegram morning digest alert engine
+├── site/
+│   ├── css/
+│   │   └── style.css             # Cyber-racing theme, 3D scroll perspective & responsive layout
+│   ├── js/
+│   │   └── app.js                # Search, dynamic filters, scroll reveals & telemetry modal
+│   └── index.html                # Compiled standalone production dashboard
+├── .env.example                  # Environment configuration template
+├── cron.example                  # Local Linux/macOS crontab template
+├── profile.example.json          # Sanitized candidate profile template
+├── profile.json                  # Active candidate profile (Git-ignored for privacy)
+├── run_daily_refresh.sh          # 1-click executable refresh pipeline
+└── README.md                     # Engineering documentation
+```
 
 ---
 
-## 🚀 Quick Start
+## 🚀 Quick Start (Local Setup)
 
-### 1. Configure Your Candidate Profile
+### 1. Clone & Configure Candidate Profile
 ```bash
+git clone https://github.com/srinivaspolanki/job-radar.git
+cd job-radar
+
+# Create your private candidate profile from the template:
 cp profile.example.json profile.json
-# Adjust profile.json with your skills, degree, and languages
+# Edit profile.json with your skills, degree, target locations, and languages
 ```
 
-### 2. Run Daily Refresh
+### 2. Run the Daily Pipeline
 ```bash
 ./run_daily_refresh.sh
 ```
 
-### 3. View the 3D Dashboard Locally
+### 3. Launch Local Dashboard
 ```bash
 python3 -m http.server 8080 --directory site
-# Open http://localhost:8080 in your browser
+# Visit http://localhost:8080 in your browser
 ```
 
 ---
 
 ## 📱 Telegram Morning Alert Setup
 
-Every morning at 07:00 AM German Time (Europe/Berlin), Job Radar delivers a digest of the top ranked jobs to your Telegram chat.
+Every morning at **07:00 AM German Time (Europe/Berlin)**, Job Radar delivers a curated summary of top matching positions directly to your phone.
 
-### 1. Create a Telegram Bot (30 seconds)
-1. Open Telegram and search for [`@BotFather`](https://t.me/BotFather).
-2. Send `/newbot`, choose a name (e.g. `MyJobRadarBot`) and username (e.g. `srinivas_job_radar_bot`).
-3. Copy the **HTTP API Token** (e.g. `123456789:ABCdefGhIJKlmNoPQRsTUVwxyZ`).
+### 1. Create a Telegram Bot
+1. In Telegram, search for [`@BotFather`](https://t.me/BotFather) and send `/newbot`.
+2. Follow the prompts to create your bot and copy the **HTTP API Token**.
 
-### 2. Get Your Personal Chat ID (10 seconds)
-1. In Telegram, search for [`@userinfobot`](https://t.me/userinfobot) and press **Start**.
-2. Copy your numerical **Id** (e.g. `987654321`).
-3. Send `/start` to your newly created bot.
+### 2. Get Your Personal Chat ID
+1. Search for [`@userinfobot`](https://t.me/userinfobot) in Telegram and press **Start** to view your numerical ID.
+2. Open a chat with your newly created bot and press **Start**.
 
-### 3. Configure & Test Locally
+### 3. Configure Local Credentials
 ```bash
 cp .env.example .env
-# Fill in TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
+# Edit .env and set your TELEGRAM_BOT_TOKEN and TELEGRAM_CHAT_ID
+
+# Verify connection:
 python3 scripts/send_telegram.py --test
 ```
 
 ---
 
-## 🌐 GitHub Pages Deployment & Cloud Setup
+## ☁️ Cloud CI/CD & GitHub Pages Deployment
 
-1. Push this repository to GitHub (Public or Private):
-   ```bash
-   git remote add origin https://github.com/<YOUR_USERNAME>/job-radar.git
-   git push -u origin main
-   ```
-2. In your GitHub repo, go to **Settings > Secrets and variables > Actions** and add:
-   - `JOB_RADAR_PROFILE`: Paste contents of your local `profile.json`.
-   - `TELEGRAM_BOT_TOKEN`: Your Telegram Bot Token.
-   - `TELEGRAM_CHAT_ID`: Your Telegram Chat ID.
-   - `DASHBOARD_URL`: `https://<YOUR_USERNAME>.github.io/job-radar/`
-3. Go to **Settings > Pages** and set **Source** to **GitHub Actions**.
-4. GitHub Actions will now automatically update your site and notify your Telegram every morning at 07:00 AM German Time!
+Job Radar is designed for **zero-maintenance, zero-cloud-cost continuous operation** via GitHub Actions.
+
+### 1. Set Repository Secrets
+In your GitHub repository, navigate to **Settings > Secrets and variables > Actions** and add:
+
+| Secret Name | Value | Description |
+| :--- | :--- | :--- |
+| `JOB_RADAR_PROFILE` | Contents of `profile.json` | Candidate profile data *(keeps your CV private)* |
+| `TELEGRAM_BOT_TOKEN` | `123456:ABC-DEF...` | Telegram bot token from `@BotFather` |
+| `TELEGRAM_CHAT_ID` | `987654321` | Numerical Telegram user ID from `@userinfobot` |
+| `DASHBOARD_URL` | `https://<user>.github.io/<repo>/` | URL of your deployed GitHub Pages dashboard |
+
+### 2. Enable GitHub Pages
+1. Go to **Settings > Pages**.
+2. Under **Build and deployment > Source**, select **GitHub Actions**.
+
+### 3. Execution Schedule
+The pipeline triggers automatically every morning at **07:00 AM German Time** (and on every push to `main`):
+- Ingests fresh postings from German feeds.
+- Computes matching scores against the encrypted repository profile secret.
+- Compiles and publishes the static web application to GitHub Pages.
+- Pushes the morning digest with 1-tap application links to your Telegram app.
+
+---
+
+## 👤 Author
+
+**Polanki Srinivas**  
+*M.Sc. Artificial Intelligence and Robotics — Hochschule Hof, Germany*  
+- **Email**: [srinivaspolankis@gmail.com](mailto:srinivaspolankis@gmail.com)  
+- **GitHub**: [@srinivaspolanki](https://github.com/srinivaspolanki)  
+- **Live Job Radar**: [https://srinivaspolanki.github.io/job-radar/](https://srinivaspolanki.github.io/job-radar/)
+
+---
+
+## 📄 License
+
+This project is licensed under the [MIT License](LICENSE).
