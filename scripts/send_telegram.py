@@ -58,7 +58,12 @@ def escape_html(text):
 def build_telegram_message(ranked_jobs, profile, dashboard_url=None):
     candidate_name = profile.get("candidate_name", "Candidate")
     degree = profile.get("degree", "Student")
-    today_str = datetime.now().strftime("%A, %b %d, %Y")
+    try:
+        from zoneinfo import ZoneInfo
+        now_berlin = datetime.now(ZoneInfo("Europe/Berlin"))
+        today_str = now_berlin.strftime("%A, %b %d, %Y (%Z)")
+    except Exception:
+        today_str = datetime.now().strftime("%A, %b %d, %Y")
     
     # Filter top matches (score >= 70, up to 5 jobs)
     top_jobs = [j for j in ranked_jobs if j.get("composite_score", 0) >= 70][:5]

@@ -19,7 +19,13 @@ SITE_DIR = BASE_DIR / "site"
 INDEX_HTML_PATH = SITE_DIR / "index.html"
 
 def generate_html(ranked_jobs, profile):
-    build_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+    try:
+        from zoneinfo import ZoneInfo
+        now_berlin = datetime.now(ZoneInfo("Europe/Berlin"))
+        build_time = now_berlin.strftime("%Y-%m-%d %H:%M %Z")
+    except Exception:
+        build_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M UTC")
+
     candidate_name = profile.get("candidate_name", "Candidate")
     degree = profile.get("degree", "M.Sc. Student")
     university = profile.get("university", "University")
@@ -107,8 +113,8 @@ def generate_html(ranked_jobs, profile):
             </div>
             <div class="metric-card">
                 <div>
-                    <div class="metric-number">07:00 UTC</div>
-                    <div class="metric-label">Daily Automated Sweep</div>
+                    <div class="metric-number">07:00 CEST</div>
+                    <div class="metric-label">Daily German Morning Sync</div>
                 </div>
                 <div class="metric-badge-icon badge-mono">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
