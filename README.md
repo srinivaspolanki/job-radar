@@ -6,7 +6,6 @@
 [![Live Dashboard](https://img.shields.io/badge/Live_Dashboard-GitHub_Pages-DFFF04?style=flat&logo=github&logoColor=black)](https://srinivaspolanki.github.io/job-radar/)
 [![Python](https://img.shields.io/badge/Python-3.11+-3776AB?style=flat&logo=python&logoColor=white)](https://www.python.org/)
 [![Telegram](https://img.shields.io/badge/Telegram_Bot-Alerts-26A5E4?style=flat&logo=telegram&logoColor=white)](https://telegram.org/)
-[![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 **A deterministic, privacy-preserving job intelligence engine that ingests German tech roles, scores them against a structured candidate profile across 4 weighted signals, deploys a standalone 3D dashboard to GitHub Pages, and delivers daily morning digests straight to Telegram.**
 
@@ -241,9 +240,3 @@ The pipeline triggers automatically every morning at **07:00 AM German Time** (a
 - **Email**: [srinivaspolankis@gmail.com](mailto:srinivaspolankis@gmail.com)  
 - **GitHub**: [@srinivaspolanki](https://github.com/srinivaspolanki)  
 - **Live Job Radar**: [https://srinivaspolanki.github.io/job-radar/](https://srinivaspolanki.github.io/job-radar/)
-
----
-
-## 📄 License
-
-This project is licensed under the [MIT License](LICENSE).
